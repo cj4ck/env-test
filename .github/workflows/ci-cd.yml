@@ -1,0 +1,45 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ./my-nextjs-app
+    - name: Build
+      run: npm run build
+      working-directory: ./my-nextjs-app
+    - name: Lint
+      run: npm run lint
+      working-directory: ./my-nextjs-app
+    # Add test step here when you have tests
+    # - name: Test
+    #   run: npm test
+    #   working-directory: ./my-nextjs-app
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Deploy to production
+      run: |
+        echo "Deploying to production..."
+        # Add your deployment steps here
+        # For example, you might use SSH to deploy to your server:
+        # ssh user@your-server 'cd /path/to/app && git pull && npm install && npm run build && pm2 restart app'
