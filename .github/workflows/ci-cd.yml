@@ -46,7 +46,5 @@ jobs:
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${USER}@${HOST} '
           cd /home/cj4ck/env-test &&
-          git pull origin main &&
-          docker-compose build nextjs-app-prod &&
-          docker-compose up -d nextjs-app-prod
+          git pull origin main
         '
