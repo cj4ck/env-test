@@ -22,7 +22,7 @@ jobs:
             whoami
             ls -al
             cd /home/cj4ck/env-test
-            cj4ck git pull origin main
+            git pull origin main
 
   #   steps:
   #   - uses: actions/checkout@v2
