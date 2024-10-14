@@ -18,8 +18,12 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.PORT }}
-          script: whoami
-    
+          script: |
+            whoami
+            ls -al
+            cd /home/cj4ck/env-test
+            cj4ck git pull origin main
+
   #   steps:
   #   - uses: actions/checkout@v2
   #   - name: Use Node.js
