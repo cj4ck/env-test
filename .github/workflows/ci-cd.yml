@@ -14,9 +14,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Use Secrets
-  run: |
-    echo "Hello, World!"
-    echo "This is a valid command."
+      - name: Run some commands
+        run: |
+          echo "Hello, World!"
+          echo "This is a valid command."
 
   #   steps:
   #   - uses: actions/checkout@v2
