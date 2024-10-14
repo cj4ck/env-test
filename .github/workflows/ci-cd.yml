@@ -43,8 +43,15 @@ jobs:
         HOST: ${{ secrets.SERVER_HOST }}
         USER: ${{ secrets.SERVER_USER }}
       run: |
+        if [ -z "$PRIVATE_KEY" ] || [ -z "$HOST" ] || [ -z "$USER" ]; then
+          echo "Error: One or more required secrets are missing."
+          exit 1
+        fi
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${USER}@${HOST} '
           cd /home/cj4ck/env-test &&
           git pull origin main
         '
+    - name: Cleanup
+      if: always()
+      run: rm -f private_key
