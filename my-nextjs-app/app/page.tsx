@@ -13,7 +13,7 @@ export default function Home() {
           priority
         />
         <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <h1>Hey, this is production</h1>
+          <h1>Hey, this is development</h1>
         </ol>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
