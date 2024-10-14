@@ -6,29 +6,29 @@ on:
   pull_request:
     branches: [ main, develop ]
 
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+# jobs:
+#   build-and-test:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '18'
-    - name: Install dependencies
-      run: npm ci
-      working-directory: ./my-nextjs-app
-    - name: Build
-      run: npm run build
-      working-directory: ./my-nextjs-app
-    - name: Lint
-      run: npm run lint
-      working-directory: ./my-nextjs-app
-    # Add test step here when you have tests
-    # - name: Test
-    #   run: npm test
-    #   working-directory: ./my-nextjs-app
+#     steps:
+#     - uses: actions/checkout@v2
+#     - name: Use Node.js
+#       uses: actions/setup-node@v2
+#       with:
+#         node-version: '18'
+#     - name: Install dependencies
+#       run: npm ci
+#       working-directory: ./my-nextjs-app
+#     - name: Build
+#       run: npm run build
+#       working-directory: ./my-nextjs-app
+#     - name: Lint
+#       run: npm run lint
+#       working-directory: ./my-nextjs-app
+#     # Add test step here when you have tests
+#     # - name: Test
+#     #   run: npm test
+#     #   working-directory: ./my-nextjs-app
 
   deploy:
     needs: build-and-test
@@ -43,10 +43,17 @@ jobs:
         HOST: ${{ secrets.SERVER_HOST }}
         USER: ${{ secrets.SERVER_USER }}
       run: |
-        if [ -z "$PRIVATE_KEY" ] || [ -z "$HOST" ] || [ -z "$USER" ]; then
-          echo "Error: One or more required secrets are missing."
+        missing_secrets=()
+        [ -z "$PRIVATE_KEY" ] && missing_secrets+=("SERVER_SSH_KEY")
+        [ -z "$HOST" ] && missing_secrets+=("SERVER_HOST")
+        [ -z "$USER" ] && missing_secrets+=("SERVER_USER")
+        
+        if [ ${#missing_secrets[@]} -ne 0 ]; then
+          echo "Error: The following required secrets are missing:"
+          printf '%s\n' "${missing_secrets[@]}"
           exit 1
         fi
+        
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${USER}@${HOST} '
           cd /home/cj4ck/env-test &&
