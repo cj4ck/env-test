@@ -7,45 +7,50 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  build-and-test:
+  your_job:
+    runs-on: ubuntu-latest
     environment: SERVER_SSH_KEY
-    runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '18'
-    - name: Install dependencies
-      run: npm ci
-      working-directory: ./my-nextjs-app
-    - name: Build
-      run: npm run build
-      working-directory: ./my-nextjs-app
-    - name: Lint
-      run: npm run lint
-      working-directory: ./my-nextjs-app
-    # Add test step here when you have tests
-    # - name: Test
-    #   run: npm test
-    #   working-directory: ./my-nextjs-app
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Secrets
+        run: echo ${{ secrets.SERVER_SSH_KEY }}
 
-  deploy:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Use Node.js
+  #     uses: actions/setup-node@v2
+  #     with:
+  #       node-version: '18'
+  #   - name: Install dependencies
+  #     run: npm ci
+  #     working-directory: ./my-nextjs-app
+  #   - name: Build
+  #     run: npm run build
+  #     working-directory: ./my-nextjs-app
+  #   - name: Lint
+  #     run: npm run lint
+  #     working-directory: ./my-nextjs-app
+  #   # Add test step here when you have tests
+  #   # - name: Test
+  #   #   run: npm test
+  #   #   working-directory: ./my-nextjs-app
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Deploy to production
-      env:
-        PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-        HOST: ${{ secrets.SERVER_HOST }}
-        USER: ${{ secrets.SERVER_USER }}
-      run: |
-        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-        ssh -o StrictHostKeyChecking=no -i private_key ${USER}@${HOST} '
-          cd /path/to/your/project &&
-          git pull origin main
-        '
+  # deploy:
+  #   needs: build-and-test
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Deploy to production
+  #     env:
+  #       PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+  #       HOST: ${{ secrets.SERVER_HOST }}
+  #       USER: ${{ secrets.SERVER_USER }}
+  #     run: |
+  #       echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+  #       ssh -o StrictHostKeyChecking=no -i private_key ${USER}@${HOST} '
+  #         cd /path/to/your/project &&
+  #         git pull origin main
+  #       '
