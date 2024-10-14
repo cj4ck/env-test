@@ -14,7 +14,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Use Secrets
-        run: echo ${{ secrets.SERVER_SSH_KEY }}
+  run: |
+    echo "Hello, World!"
+    echo "This is a valid command."
 
   #   steps:
   #   - uses: actions/checkout@v2
